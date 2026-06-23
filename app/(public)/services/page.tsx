@@ -4,8 +4,17 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { getServerLocale, getTranslation } from "@/lib/server-i18n";
 
+interface PrismaService {
+  id: string;
+  name: string;
+  description: string | null;
+  duration: number;
+  price: number;
+  sortOrder: number;
+}
+
 export default async function ServicesPage() {
-  const services = await prisma.service.findMany({
+  const services: PrismaService[] = await prisma.service.findMany({
     where: { isActive: true },
     orderBy: { sortOrder: "asc" },
   });
