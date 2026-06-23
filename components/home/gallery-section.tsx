@@ -5,8 +5,10 @@ import { FadeIn } from "@/components/ui/fade-in";
 import { Sparkles } from "lucide-react";
 import { getServerLocale, getTranslation } from "@/lib/server-i18n";
 
+interface GalleryImg { id: string; url: string; altText: string | null; sortOrder: number; }
+
 export async function GallerySection() {
-  const images = await prisma.galleryImage.findMany({
+  const images: GalleryImg[] = await prisma.galleryImage.findMany({
     where: { isActive: true },
     orderBy: { sortOrder: "asc" },
     take: 6,

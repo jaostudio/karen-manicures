@@ -40,7 +40,7 @@ export default async function DashboardPage() {
     ]);
 
   const totalRevenue = confirmedBookings.reduce(
-    (sum, b) => sum + (b.service?.price || 0),
+    (sum: number, b: { service?: { price?: number } | null }) => sum + (b.service?.price || 0),
     0
   );
 

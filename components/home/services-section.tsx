@@ -5,8 +5,10 @@ import { getServerLocale, getTranslation } from "@/lib/server-i18n";
 
 const serviceIcons = ["💅", "💎", "🦶", "✨"];
 
+interface Svc { id: string; name: string; description: string | null; duration: number; price: number; sortOrder: number; }
+
 export async function ServicesSection() {
-  const services = await prisma.service.findMany({
+  const services: Svc[] = await prisma.service.findMany({
     where: { isActive: true },
     orderBy: { sortOrder: "asc" },
   });
