@@ -2,10 +2,12 @@ import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 import { TemplatesList } from "@/components/admin/templates-list";
 
+interface Setting { key: string; value: string | null; }
+
 export default async function TemplatesPage() {
   await requireAdmin();
 
-  const settings = await prisma.setting.findMany({
+  const settings: Setting[] = await prisma.setting.findMany({
     where: { key: { startsWith: "template_" } },
   });
 
