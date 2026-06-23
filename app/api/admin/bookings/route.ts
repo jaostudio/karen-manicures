@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { sendBookingNotification } from "@/lib/notifications";
 
+interface BookingRow {
+  id: string; customerName: string; customerPhone: string; customerEmail: string | null;
+  startTime: Date; status: string; smsConsent: boolean;
+  service: { name: string; duration: number; price: number } | null;
+}
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -14,7 +20,7 @@ export async function GET(req: NextRequest) {
       where.startTime = { gte: start, lte: end };
     }
 
-    const bookings = await prisma.booking.findMany({
+    const bookings: BookingRow[] = await prisma.booking.findMany({
       where,
       include: { service: true },
       orderBy: { startTime: "asc" },

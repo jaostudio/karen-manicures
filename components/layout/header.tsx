@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { Menu, Sparkles } from "lucide-react";
@@ -8,6 +9,7 @@ import { useLocale } from "@/lib/locale-context";
 
 export function Header() {
   const { t, locale, setLocale } = useLocale();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
@@ -55,7 +57,7 @@ export function Header() {
           </Link>
         </div>
 
-        <Sheet>
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger
             className="inline-flex items-center justify-center rounded-lg text-sm font-medium hover:bg-muted h-10 w-10 md:hidden"
             aria-label={t("common.menu")}
@@ -78,6 +80,7 @@ export function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  onClick={() => setMobileOpen(false)}
                   className="text-lg font-medium"
                 >
                   {t(`nav.${item.label.toLowerCase()}`)}
@@ -86,6 +89,7 @@ export function Header() {
               <hr />
               <Link
                 href="/book"
+                onClick={() => setMobileOpen(false)}
                 className="inline-flex items-center justify-center rounded-full bg-pink-600 text-primary-foreground text-sm font-medium hover:bg-pink-700 active:scale-[0.97] px-2.5 py-1.5 h-9 w-full transition-all duration-200"
               >
                 {t("common.bookNow")}

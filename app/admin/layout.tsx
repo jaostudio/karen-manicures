@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -12,10 +13,10 @@ import {
   Settings,
   LogOut,
   Sparkles,
+  Menu,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
 
 const navItems = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
@@ -34,6 +35,7 @@ export default function AdminLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   async function handleLogout() {
     await fetch("/api/admin/logout", { method: "POST" });
@@ -96,7 +98,7 @@ export default function AdminLayout({
               Karen&apos;s Panel
             </span>
           </div>
-          <Sheet>
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger
               className="inline-flex items-center justify-center rounded-lg text-sm font-medium hover:bg-muted h-10 w-10"
               aria-label="Menu"
@@ -112,6 +114,7 @@ export default function AdminLayout({
                     <Link
                       key={item.href}
                       href={item.href}
+                      onClick={() => setMobileOpen(false)}
                       className={`flex items-center gap-3 px-3 py-2 min-h-10 rounded-lg text-sm font-medium ${
                         isActive
                           ? "bg-pink-100 text-pink-700"
@@ -127,13 +130,13 @@ export default function AdminLayout({
                 <Button
                   variant="ghost"
                   className="justify-start text-muted-foreground"
-                  onClick={handleLogout}
+                  onClick={() => { setMobileOpen(false); handleLogout(); }}
                 >
                   <LogOut className="h-4 w-4 mr-3" />
                   Logout
                 </Button>
                 <p className="text-[10px] text-muted-foreground/50 text-center mt-3">
-                  Built by <a href="https://jaostudio.com" target="_blank" rel="noopener noreferrer" className="hover:text-pink-600 transition-colors">Jaostudio</a>
+                  Built by <a href="https://jaostudio.com" target="_blank" rel="noopener noreferrer" onClick={() => setMobileOpen(false)} className="hover:text-pink-600 transition-colors">Jaostudio</a>
                 </p>
               </nav>
             </SheetContent>

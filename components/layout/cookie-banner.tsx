@@ -1,20 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 import Link from "next/link";
 
+function subscribe(cb: () => void) {
+  window.addEventListener("storage", cb);
+  return () => window.removeEventListener("storage", cb);
+}
+
+function getSnapshot() {
+  return localStorage.getItem("cookie-consent");
+}
+
+function getServerSnapshot() {
+  return null;
+}
+
 export function CookieBanner() {
-  const [visible, setVisible] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return !localStorage.getItem("cookie-consent");
-  });
+  const consent = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
-  const accept = () => {
+  const accept = useCallback(() => {
     localStorage.setItem("cookie-consent", "accepted");
-    setVisible(false);
-  };
+    window.dispatchEvent(new StorageEvent("storage", { key: "cookie-consent", newValue: "accepted" }));
+  }, []);
 
-  if (!visible) return null;
+  if (consent) return null;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 border-t bg-white shadow-lg p-4 animate-slide-up">

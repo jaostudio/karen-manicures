@@ -48,3 +48,19 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.vercel
+
+# dev server logs
+dev-server*.log
+
+# libsql temp files
+auth*
+help*
+
+# test database
+prisma/test.db
+prisma/test.db-journal
+
+# CI workflow (token scope limitation)
+.github/

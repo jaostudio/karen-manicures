@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useCallback, useSyncExternalStore, type ReactNode } from "react";
 import type { Locale } from "./i18n";
 import { getTranslation } from "./i18n";
 
@@ -12,20 +12,28 @@ interface LocaleContextType {
 
 const LocaleContext = createContext<LocaleContextType | null>(null);
 
-function getInitialLocale(): Locale {
-  if (typeof window === "undefined") return "en";
+function subscribe(cb: () => void) {
+  window.addEventListener("storage", cb);
+  return () => window.removeEventListener("storage", cb);
+}
+
+function getLocaleSnapshot(): Locale {
   const stored = localStorage.getItem("locale") as Locale | null;
   if (stored === "en" || stored === "tl") return stored;
   return "en";
 }
 
+function getServerLocaleSnapshot(): Locale {
+  return "en";
+}
+
 export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(getInitialLocale);
+  const locale = useSyncExternalStore(subscribe, getLocaleSnapshot, getServerLocaleSnapshot);
 
   const setLocale = useCallback((newLocale: Locale) => {
-    setLocaleState(newLocale);
     localStorage.setItem("locale", newLocale);
     document.cookie = `locale=${newLocale};path=/;max-age=31536000`;
+    window.dispatchEvent(new StorageEvent("storage", { key: "locale", newValue: newLocale }));
   }, []);
 
   const t = useCallback((key: string) => getTranslation(locale, key), [locale]);
