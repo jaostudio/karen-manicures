@@ -24,6 +24,15 @@
 .DS_Store
 *.pem
 
+# audit artifacts
+audits/
+playwright-report/
+test-results/
+
+# dev database
+prisma/dev.db
+prisma/dev.db-journal
+
 # debug
 npm-debug.log*
 yarn-debug.log*
