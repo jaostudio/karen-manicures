@@ -30,13 +30,13 @@ Create `vercel.json` in the project root:
   "crons": [
     {
       "path": "/api/cron/send-reminders",
-      "schedule": "*/15 * * * *"
+      "schedule": "0 9 * * *"
     }
   ]
 }
 ```
 
-This runs every 15 minutes, which is sufficient for catching all 24h and 2h reminders.
+This runs daily at 9 AM (Hobby plan restriction — max 1/day). Covers the 24h reminder. The 2h reminder is skipped on Hobby; upgrade to Pro for `*/15 * * * *`.
 
 ### 2. Environment Variables (Vercel Dashboard)
 
