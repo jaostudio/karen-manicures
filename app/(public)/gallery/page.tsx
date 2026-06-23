@@ -2,8 +2,15 @@ import { prisma } from "@/lib/db";
 import Image from "next/image";
 import { getServerLocale, getTranslation } from "@/lib/server-i18n";
 
+interface GalleryImage {
+  id: string;
+  url: string;
+  altText: string | null;
+  sortOrder: number;
+}
+
 export default async function GalleryPage() {
-  const images = await prisma.galleryImage.findMany({
+  const images: GalleryImage[] = await prisma.galleryImage.findMany({
     where: { isActive: true },
     orderBy: { sortOrder: "asc" },
   });
