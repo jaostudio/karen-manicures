@@ -62,5 +62,8 @@ help*
 prisma/test.db
 prisma/test.db-journal
 
+# lighthouse reports
+lighthouse-*.json
+
 # CI workflow (token scope limitation)
 .github/
